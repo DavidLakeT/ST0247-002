@@ -6,33 +6,58 @@ import java.util.LinkedList;
 
 public class DigraphAL extends Digraph {
 
-    private ArrayList<LinkedList<Pair<Integer,Integer>>> listaDeListas;
+    LinkedList<Pair<Integer,Integer>> listaDePares[];
 
     public DigraphAL(int size) {
 
         super(size);
-        listaDeListas = new ArrayList<>(size);
-
-        for(int i = 0; i < size; i++){
-
-            listaDeListas.set(i, new LinkedList<Pair<Integer, Integer>>());
-        }
+        this.size = size;
+        this.listaDePares = new LinkedList[size];
     }
 
     public void addArc(int source, int destination, int weight) {
 
-        LinkedList<Pair<Integer,Integer>> destinosDeSource = listaDeListas.get(source);
-        Pair<Integer,Integer> parejaNueva = new Pair<>(destination, weight);
-        destinosDeSource.add(parejaNueva);
+        if(listaDePares[source] == null){
+
+            listaDePares[source] = new LinkedList<>();
+        }
+
+        listaDePares[source].add(new Pair<>(destination, weight));
     }
 
     public ArrayList<Integer> getSuccessors(int vertex) {
 
+        ArrayList<Integer> sucesores = null;
+        LinkedList<Pair<Integer,Integer>> sucesoresAux = this.listaDePares[vertex];
 
+        if(sucesoresAux != null){
+
+            for(Pair pareja : sucesoresAux){
+
+                if(sucesores == null){
+
+                    sucesores = new ArrayList<Integer>();
+                }
+
+                sucesores.add((Integer) pareja.first);
+            }
+        }
+
+        return sucesores;
     }
 
     public int getWeight(int source, int destination) {
 
-    }
+        LinkedList<Pair<Integer,Integer>> listaAux = listaDePares[source];
+        int weight = 0;
 
+        for(Pair pareja : listaAux){
+
+            if((int) pareja.first == destination){
+
+                weight = (int) pareja.second;
+            }
+        }
+        return weight;
+    }
 }
